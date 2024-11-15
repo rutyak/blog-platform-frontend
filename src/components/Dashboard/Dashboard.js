@@ -40,7 +40,7 @@ function Dashboard() {
   // Handle delete post
   const deletePost = async () => {
     try {
-      await axios.delete(`${Base_url}/api/posts/${selectedPost._id}`);
+      await axios.delete(`${Base_url}/delete/post/${selectedPost._id}`);
       setPosts(posts.filter((post) => post._id !== selectedPost._id));
       toast.success(`${selectedPost.title} has been deleted.`, {
         position: "top-right",
