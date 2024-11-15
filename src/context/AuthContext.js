@@ -1,6 +1,6 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import { createContext, useState, useContext, useEffect } from "react";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode"; // Correct the import
 
 const Base_url = process.env.REACT_APP_BACKEND_URL;
 
@@ -10,45 +10,69 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   const login = async (credentials) => {
-    const { data } = await axios.post(`${Base_url}/login`, credentials);
-    localStorage.setItem('user',JSON.stringify(data.user)); //store user data 
-    localStorage.setItem('token', data.token); // Store token on login
-    setUser(jwtDecode(data.token)); // Decode and set user from token
+    try {
+      const { data } = await axios.post(`${Base_url}/login`, credentials);
+      
+      // Save token and user data to localStorage
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+
+      // Decode the token and set user state
+      const decodedToken = jwtDecode(data.token);
+      if (decodedToken.exp * 1000 < Date.now()) {
+        throw new Error("Token has expired");
+      }
+
+      setUser(decodedToken); 
+      setUserData(data?.user);
+    } catch (error) {
+      console.error("Login failed:", error.message);
+    }
   };
 
   const register = async (credentials) => {
     try {
       const { data } = await axios.post(`${Base_url}/register`, credentials);
-      return data.message;  // Return success message from server
+      return data.message; // Return success message from server
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
+      console.error("Registration failed:", error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || "Registration failed");
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
+    setUserData(null); 
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
     if (token) {
       try {
-        // Only attempt to decode if the token is not empty and is valid
         const decodedToken = jwtDecode(token);
+
         setUser(decodedToken);
+
+        if (storedUser) {
+          setUserData(JSON.parse(storedUser)); 
+        }
       } catch (error) {
-        // Handle invalid token case, remove it from localStorage
-        console.error("Invalid token:", error);
-        localStorage.removeItem('token');
+        console.error("Invalid or expired token:", error.message);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, userData, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

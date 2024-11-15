@@ -27,12 +27,11 @@ const Register = ({ onBackToLogin }) => {
         email,
         password,
       };
-
-      // Attempt to register the user
+      
       const message = await register(obj); // Register returns a success message
       toast.success(message);
       setLoading(false); 
-      onBackToLogin(); // Navigate to login page
+      onBackToLogin();
     } catch (error) {
       // If registration fails (e.g., user already exists), show the error message
       toast.error(error.message || "An error occurred during registration");

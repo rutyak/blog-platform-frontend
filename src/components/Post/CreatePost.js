@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 
 const Base_url = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,18 +20,26 @@ function CreatePost() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { userData } = useAuth();
+  console.log("userData from context::::", userData);
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user._id) {
-      console.log("User is not logged in.");
+    // Check if user is authenticated
+    if (!userData || !userData._id) {
+      toast.error("You need to be logged in to create a post.");
       return;
     }
 
-    console.log("Sending Data:", { title, content, authorId: String(user._id) });
+    console.log("Sending Data:", {
+      title,
+      content,
+      authorId: String(userData._id),
+    });
 
-    let obj = { title, content, authorId: String(user._id) };
+    const obj = { title, content, authorId: String(userData._id) };
 
     try {
       const res = await axios.post(`${Base_url}/create/post`, obj);
@@ -47,15 +56,31 @@ function CreatePost() {
     }
   };
 
-  const openModal = () => setIsModalOpen(true);
+  // Open modal
+  const openModal = () => {
+    if (!userData || !userData._id) {
+      toast.error("You need to be logged in to create a post.");
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
+  // Close modal
   const closeModal = () => setIsModalOpen(false);
 
   return (
     <div>
-      <Button onClick={openModal} variant="contained" color="primary">
+      {/* Disable button if user is not authenticated */}
+      <Button
+        onClick={openModal}
+        variant="contained"
+        color="primary"
+        disabled={!userData || !userData._id}
+      >
         Create Post
       </Button>
 
+      {/* Modal for creating post */}
       <Dialog open={isModalOpen} onClose={closeModal} maxWidth="sm" fullWidth>
         <DialogTitle>Create a New Blog Post</DialogTitle>
         <DialogContent>
@@ -67,6 +92,7 @@ function CreatePost() {
               onChange={(e) => setTitle(e.target.value)}
               fullWidth
               required
+              sx={{ mb: 2 }}
             />
             <TextField
               label="Content"

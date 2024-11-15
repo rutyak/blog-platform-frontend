@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import Login from "../components/authentication/Login";
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Profile from "../components/Profile/Profile";
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -33,7 +32,37 @@ function Navbar() {
 
       <div className="flex items-center space-x-4">
         {user ? (
-          <Profile/>
+          <div>
+            {/* Profile Icon with Menu */}
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleProfileMenuOpen}
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              id="menu-appbar"
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
         ) : (
           <Login />
         )}

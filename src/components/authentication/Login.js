@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Button, Modal, Box, TextField, FormControlLabel, Checkbox, Typography, CircularProgress } from "@mui/material";
+import { Button, Modal, Box, TextField, Typography, CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import Register from "./Register"; 
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; 
 
 const Login = () => {
@@ -13,7 +12,6 @@ const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false); // state to toggle between Login and Register
 
   const { login } = useAuth(); 
-  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,7 +21,8 @@ const Login = () => {
     try {
       await login(credentials); 
       toast.success("Login successful!");
-      navigate("/home"); 
+      setOpen(false);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       toast.error("Invalid credentials");
@@ -103,10 +102,6 @@ const Login = () => {
                   }}
                   className="bg-gray-100 rounded-md"
                 />
-
-                <div className="flex justify-between items-center mb-4">
-                  <FormControlLabel control={<Checkbox name="remember" />} label="Remember me" sx={{ color: "gray", fontSize: "14px" }} />
-                </div>
 
                 <Button
                   type="submit"

@@ -1,16 +1,12 @@
-import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { toast } from "react-toastify"; 
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuth(); // Get the authenticated user from context
+  const { user } = useAuth(); 
   const navigate = useNavigate();
-  
+
   if (!user) {
-   
-    toast.error("You must be logged in to access this page!");
-   
+      
     setTimeout(() => {
       navigate("/");
     }, 3000); 
