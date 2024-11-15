@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 const Base_url = process.env.REACT_APP_BACKEND_URL;
 
 // import { useAuth } from '../../context/AuthContext';
 // import { useToast } from '@chakra-ui/react';
 
 function Dashboard() {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ function Dashboard() {
   // useEffect(() => {
   //   const fetchPosts = async () => {
   //     try {
-  //       const { data } = await axios.get(`${Base_url}/fetch/post${user.id}`);
+  //       const { data } = await axios.get(`${Base_url}/fetch/post/${user._id}`);
   //       setPosts(data);
   //     } catch (error) {
   //       // toast({

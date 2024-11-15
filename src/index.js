@@ -8,7 +8,8 @@ import App from "./App";
 import Home from "./components/Home/Home";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Register from "./components/authentication/Register";
-import { AuthProvider } from "./context/AuthContext"; 
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/Privaterouter/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,11 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
     ],
   },
@@ -34,7 +39,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider> 
+    <AuthProvider>
       <ToastContainer />
       <RouterProvider router={router} />
     </AuthProvider>
