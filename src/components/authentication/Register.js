@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField, Typography, CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext"; 
+import { useAuth } from "../../context/AuthContext";
 
 const Register = ({ onBackToLogin }) => {
   const { register } = useAuth();
@@ -27,15 +27,17 @@ const Register = ({ onBackToLogin }) => {
         email,
         password,
       };
-      
-      const message = await register(obj); // Register returns a success message
-      toast.success(message);
-      setLoading(false); 
+
+      const { success } = await register(obj); // Register returns a success message
+      if (success) {
+        toast.success("Registed successfully !!");
+        setLoading(false);
+      }
       onBackToLogin();
     } catch (error) {
       // If registration fails (e.g., user already exists), show the error message
       toast.error(error.message || "An error occurred during registration");
-      setLoading(false); 
+      setLoading(false);
     }
   }
 

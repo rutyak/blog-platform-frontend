@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Login from "../components/authentication/Login";
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { toast } from 'react-toastify';
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -14,6 +15,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    toast.success("Logged out successfully!");
     handleMenuClose();
   };
 

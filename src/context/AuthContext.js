@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
 
       setUser(decodedToken); 
       setUserData(data?.user);
+      return { success: true, message: data.message }; 
     } catch (error) {
       console.error("Login failed:", error.message);
     }
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (credentials) => {
     try {
       const { data } = await axios.post(`${Base_url}/register`, credentials);
-      return data.message; // Return success message from server
+      return { success: true, message: data.message }; 
     } catch (error) {
       console.error("Registration failed:", error.response?.data?.message || error.message);
       throw new Error(error.response?.data?.message || "Registration failed");

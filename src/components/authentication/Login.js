@@ -1,30 +1,43 @@
 import React, { useState } from "react";
-import { Button, Modal, Box, TextField, Typography, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { toast } from "react-toastify";
-import Register from "./Register"; 
-import { useAuth } from "../../context/AuthContext"; 
+import Register from "./Register";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false); // state to toggle between Login and Register
 
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
     const credentials = { email, password };
 
     try {
-      await login(credentials); 
-      toast.success("Login successful!");
-      setOpen(false);
-      setLoading(false);
+      const { success } = await login(credentials);
+
+      if (success) {
+        toast.success("Login Successfully !!"); 
+        setOpen(false);
+        setLoading(false);
+      } else {
+        toast.error("Invalid credentials"); 
+      }
     } catch (error) {
       setLoading(false);
+      console.error("Login error: ", error); 
       toast.error("Invalid credentials");
     }
   }
@@ -39,11 +52,21 @@ const Login = () => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" color="primary" className="mb-4">
+      <Button
+        onClick={() => setOpen(true)}
+        variant="contained"
+        color="primary"
+        className="mb-4"
+      >
         Login
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} aria-labelledby="login-modal" aria-describedby="login-modal-description">
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="login-modal"
+        aria-describedby="login-modal-description"
+      >
         <Box
           sx={{
             width: "100%",
@@ -62,7 +85,12 @@ const Login = () => {
             <Register onBackToLogin={handleBackToLogin} /> // Show Register component
           ) : (
             <>
-              <Typography variant="h6" align="center" gutterBottom sx={{ color: "black", fontSize: "22px", marginBottom: "20px" }}>
+              <Typography
+                variant="h6"
+                align="center"
+                gutterBottom
+                sx={{ color: "black", fontSize: "22px", marginBottom: "20px" }}
+              >
                 Login
               </Typography>
 
@@ -110,14 +138,22 @@ const Login = () => {
                   color="primary"
                   sx={{ marginBottom: 2 }}
                   className="bg-blue-600 hover:bg-blue-700 text-white py-2"
-                  disabled={loading} 
+                  disabled={loading}
                 >
-                  {loading ? <CircularProgress size={24} color="inherit" /> : "Login"} {/* Show loading spinner */}
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Login"
+                  )}{" "}
+                  {/* Show loading spinner */}
                 </Button>
 
                 <div className="text-gray-600 mt-6">
                   Don't have an account?{" "}
-                  <span className="text-purple-500 hover:underline cursor-pointer" onClick={handleRegisterClick}>
+                  <span
+                    className="text-purple-500 hover:underline cursor-pointer"
+                    onClick={handleRegisterClick}
+                  >
                     Register
                   </span>
                 </div>
