@@ -1,7 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Profile from './Profile/Profile';
+import { Link } from 'react-router-dom';
 import Login from "../components/authentication/Login";
 
 function Navbar() {
