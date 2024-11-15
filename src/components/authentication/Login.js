@@ -115,7 +115,7 @@ const Login = () => {
                   color="primary"
                   sx={{ marginBottom: 2 }}
                   className="bg-blue-600 hover:bg-blue-700 text-white py-2"
-                  disabled={loading} // Disable button when loading
+                  disabled={loading} 
                 >
                   {loading ? <CircularProgress size={24} color="inherit" /> : "Login"} {/* Show loading spinner */}
                 </Button>

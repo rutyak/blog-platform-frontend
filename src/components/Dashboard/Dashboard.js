@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const Base_url = process.env.REACT_APP_BACKEND_URL;
+
 // import { useAuth } from '../../context/AuthContext';
 // import { useToast } from '@chakra-ui/react';
 
@@ -13,7 +15,7 @@ function Dashboard() {
   // useEffect(() => {
   //   const fetchPosts = async () => {
   //     try {
-  //       const { data } = await axios.get(`/api/posts/user/${user.id}`);
+  //       const { data } = await axios.get(`${Base_url}/fetch/post${user.id}`);
   //       setPosts(data);
   //     } catch (error) {
   //       // toast({
