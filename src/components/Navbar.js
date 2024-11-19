@@ -25,11 +25,9 @@ function Navbar() {
         <Link to="/" className="text-xl font-semibold hover:text-teal-200">
           Home
         </Link>
-        {user && (
-          <Link to="/dashboard" className="text-lg hover:text-teal-200">
+        <Link to="/dashboard" className="text-lg hover:text-teal-200">
             Dashboard
-          </Link>
-        )}
+        </Link>
       </div>
 
       <div className="flex items-center space-x-4">
