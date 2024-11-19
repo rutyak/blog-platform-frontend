@@ -1,19 +1,19 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useAuth(); 
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   if (!user) {
-      
-    setTimeout(() => {
-      navigate("/");
-    }, 3000); 
-    return null; // Return nothing while the user is redirected
+    if(!toast.isActive("private-route")){
+      toast.error("Please sign in !!", {toastId: "private-router"});
+    }
+
+    return <Navigate to="/" replace/>;
   }
 
-  return children; // If the user is logged in, render the protected route
+  return children; 
 };
 
 export default PrivateRoute;
